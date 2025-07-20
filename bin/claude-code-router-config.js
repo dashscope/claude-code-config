@@ -14,20 +14,78 @@ class ClaudeCodeRouterConfig {
       this.pluginsDir,
       "dashscope-transformer.js"
     );
+    this.language = this.detectLanguage();
+    this.messages = this.getMessages();
+  }
+
+  detectLanguage() {
+    // 检测系统语言
+    const locale = process.env.LANG || process.env.LANGUAGE || process.env.LC_ALL || "en_US.UTF-8";
+    return locale.toLowerCase().includes('zh') ? 'zh' : 'en';
+  }
+
+  getMessages() {
+    const messages = {
+      zh: {
+        configuring: "🚀 正在配置 claude-code-router...",
+        envKeyDetected: "🔑 检测到环境变量 DASHSCOPE_API_KEY，将使用环境变量中的 API Key",
+        envKeyNotFound: "⚠️  未检测到环境变量 DASHSCOPE_API_KEY，将使用默认配置",
+        configComplete: "✅ claude-code-router 配置完成！",
+        configLocation: "📁 配置文件位置:",
+        usage: "📝 使用说明:",
+        step1: "1. 请确保已安装 @anthropic-ai/claude-code",
+        step2: "2. 请确保已安装 @musistudio/claude-code-router",
+        step3Warning: "3. ⚠️  请手动配置你的 DashScope API Key:",
+        step3Success: "3. ✅ API Key 已从环境变量自动配置",
+        step4: "4. 运行 claude-code 开始使用",
+        configFailed: "❌ 配置失败:",
+        createDir: "📁 创建目录:",
+        createConfig: "📄 创建配置文件:",
+        createPlugin: "🔧 创建插件文件:",
+        editConfigInstructions: [
+          `   cd `,
+          `   open config.json  # macOS`,
+          `   # 或者用你喜欢的编辑器打开 config.json`,
+          `   # 将 "api_key" 字段替换为你的 DashScope API Key`
+        ]
+      },
+      en: {
+        configuring: "🚀 Configuring claude-code-router...",
+        envKeyDetected: "🔑 DASHSCOPE_API_KEY environment variable detected, will use API Key from environment",
+        envKeyNotFound: "⚠️  DASHSCOPE_API_KEY environment variable not found, will use default configuration",
+        configComplete: "✅ claude-code-router configuration completed!",
+        configLocation: "📁 Configuration file location:",
+        usage: "📝 Usage instructions:",
+        step1: "1. Please ensure @anthropic-ai/claude-code is installed",
+        step2: "2. Please ensure @musistudio/claude-code-router is installed",
+        step3Warning: "3. ⚠️  Please manually configure your DashScope API Key:",
+        step3Success: "3. ✅ API Key automatically configured from environment variable",
+        step4: "4. Run claude-code to start using",
+        configFailed: "❌ Configuration failed:",
+        createDir: "📁 Creating directory:",
+        createConfig: "📄 Creating configuration file:",
+        createPlugin: "🔧 Creating plugin file:",
+        editConfigInstructions: [
+          `   cd `,
+          `   open config.json  # macOS`,
+          `   # Or open config.json with your preferred editor`,
+          `   # Replace the "api_key" field with your DashScope API Key`
+        ]
+      }
+    };
+    return messages[this.language];
   }
 
   async setup() {
     try {
-      console.log("🚀 正在配置 claude-code-router...");
+      console.log(this.messages.configuring);
 
       // 检查环境变量
       const hasEnvApiKey = !!process.env.DASHSCOPE_API_KEY;
       if (hasEnvApiKey) {
-        console.log(
-          "🔑 检测到环境变量 DASHSCOPE_API_KEY，将使用环境变量中的 API Key"
-        );
+        console.log(this.messages.envKeyDetected);
       } else {
-        console.log("⚠️  未检测到环境变量 DASHSCOPE_API_KEY，将使用默认配置");
+        console.log(this.messages.envKeyNotFound);
       }
 
       // 创建配置目录
@@ -39,26 +97,26 @@ class ClaudeCodeRouterConfig {
       // 创建插件文件
       await this.createTransformerFile();
 
-      console.log("✅ claude-code-router 配置完成！");
-      console.log("📁 配置文件位置:", this.configDir);
+      console.log(this.messages.configComplete);
+      console.log(this.messages.configLocation, this.configDir);
       console.log("");
-      console.log("📝 使用说明:");
-      console.log("1. 请确保已安装 @anthropic-ai/claude-code");
-      console.log("2. 请确保已安装 @musistudio/claude-code-router");
+      console.log(this.messages.usage);
+      console.log(this.messages.step1);
+      console.log(this.messages.step2);
 
       if (!hasEnvApiKey) {
-        console.log("3. ⚠️  请手动配置你的 DashScope API Key:");
-        console.log(`   cd ${this.configDir}`);
-        console.log(`   open config.json  # macOS`);
-        console.log(`   # 或者用你喜欢的编辑器打开 config.json`);
-        console.log(`   # 将 "api_key" 字段替换为你的 DashScope API Key`);
+        console.log(this.messages.step3Warning);
+        console.log(this.messages.editConfigInstructions[0] + this.configDir);
+        console.log(this.messages.editConfigInstructions[1]);
+        console.log(this.messages.editConfigInstructions[2]);
+        console.log(this.messages.editConfigInstructions[3]);
       } else {
-        console.log("3. ✅ API Key 已从环境变量自动配置");
+        console.log(this.messages.step3Success);
       }
 
-      console.log("4. 运行 claude-code 开始使用");
+      console.log(this.messages.step4);
     } catch (error) {
-      console.error("❌ 配置失败:", error.message);
+      console.error(this.messages.configFailed, error.message);
       process.exit(1);
     }
   }
@@ -70,7 +128,7 @@ class ClaudeCodeRouterConfig {
     // 创建插件目录
     await fs.ensureDir(this.pluginsDir);
 
-    console.log("📁 创建目录:", this.configDir);
+    console.log(this.messages.createDir, this.configDir);
   }
 
   async createConfigFile() {
@@ -116,7 +174,7 @@ class ClaudeCodeRouterConfig {
     };
 
     await fs.writeJson(this.configFile, configContent, { spaces: 2 });
-    console.log("📄 创建配置文件:", this.configFile);
+    console.log(this.messages.createConfig, this.configFile);
   }
 
   async createTransformerFile() {
@@ -140,7 +198,7 @@ class ClaudeCodeRouterConfig {
 module.exports = DashScopeTransformer;`;
 
     await fs.writeFile(this.transformerFile, transformerContent);
-    console.log("🔧 创建插件文件:", this.transformerFile);
+    console.log(this.messages.createPlugin, this.transformerFile);
   }
 }
 

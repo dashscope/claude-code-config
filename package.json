@@ -2,7 +2,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "name": "@dashscope/claude-code-router-helper",
+  "name": "@dashscope/claude-code-dashscope-config",
   "version": "0.1.3",
   "description": "Default configuration for claude-code-router with DashScope support",
   "main": "index.js",
@@ -15,7 +15,7 @@
   "files": [
     "bin",
     "README.md",
-    "README.en-US.md",
+    "README.zh-CN.md",
     "package.json"
   ],
   "keywords": [
@@ -25,7 +25,7 @@
     "configuration"
   ],
   "author": "DashScope",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "fs-extra": "^11.1.1"
   },
