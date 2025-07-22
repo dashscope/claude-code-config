@@ -1,0 +1,44 @@
+name: Publish npm packages
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # 当具有 release 标签的 PR 被合并时，自动发布包版本
+    if: contains(github.event.pull_request.labels.*.name, 'release') && github.event.pull_request.merged == true
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ci
+        run: npm run ci
+
+      - name: Get version from package.json
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        run: |
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "${{ github.actor }}"
+          git tag v${{ steps.version.outputs.version }}
+          git push origin v${{ steps.version.outputs.version }}
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN} & npm publish
