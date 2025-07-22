@@ -186,17 +186,17 @@ class ClaudeCodeRouterConfig {
           api_base_url:
             "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
           api_key: dashscopeApiKey,
-          models: ["qwen3-235b-a22b"],
+          models: ["qwen3-coder-plus", "qwen3-coder-flash"],
           transformer: {
             use: ["dashscope"],
           },
         },
       ],
       Router: {
-        default: "dashscope,qwen3-235b-a22b",
-        think: "dashscope,qwen3-235b-a22b",
-        background: "dashscope,qwen3-235b-a22b",
-        longContext: "dashscope,qwen3-235b-a22b",
+        default: "dashscope,qwen3-coder-plus",
+        think: "dashscope,qwen3-coder-plus",
+        background: "dashscope,qwen3-coder-flash",
+        longContext: "dashscope,qwen3-coder-plus",
       },
     };
 
