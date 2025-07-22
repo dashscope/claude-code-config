@@ -239,7 +239,7 @@ class ClaudeCodeRouterConfig {
           name: "dashscope",
           api_base_url: apiBaseUrl,
           api_key: dashscopeApiKey,
-          models: ["qwen3-coder-plus", "qwen3-coder-flash"],
+          models: ["qwen3-coder-plus"],
           transformer: {
             use: ["dashscope"],
           },
@@ -248,7 +248,7 @@ class ClaudeCodeRouterConfig {
       Router: {
         default: "dashscope,qwen3-coder-plus",
         think: "dashscope,qwen3-coder-plus",
-        background: "dashscope,qwen3-coder-flash",
+        background: "dashscope,qwen3-coder-plus",
         longContext: "dashscope,qwen3-coder-plus",
       },
     };

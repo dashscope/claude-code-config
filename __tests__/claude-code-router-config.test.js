@@ -221,12 +221,12 @@ describe("ClaudeCodeRouterConfig", () => {
       expect(configContent.Providers).toHaveLength(1);
       
       // Check models configuration
-      expect(configContent.Providers[0].models).toEqual(["qwen3-coder-plus", "qwen3-coder-flash"]);
+      expect(configContent.Providers[0].models).toEqual(["qwen3-coder-plus"]);
       
       // Check router configuration
       expect(configContent.Router.default).toBe("dashscope,qwen3-coder-plus");
       expect(configContent.Router.think).toBe("dashscope,qwen3-coder-plus");
-      expect(configContent.Router.background).toBe("dashscope,qwen3-coder-flash");
+      expect(configContent.Router.background).toBe("dashscope,qwen3-coder-plus");
       expect(configContent.Router.longContext).toBe("dashscope,qwen3-coder-plus");
     });
   });

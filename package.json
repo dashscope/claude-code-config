@@ -8,7 +8,7 @@
     "url": "git+https://github.com/dashscope/claude-code-config.git"
   },
   "name": "@dashscope-js/claude-code-config",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Default configuration for claude-code-router with DashScope support",
   "main": "index.js",
   "bin": {
