@@ -15,7 +15,11 @@
     "ccr-dashscope": "./bin/claude-code-router-config.js"
   },
   "scripts": {
-    "lint": "echo lint"
+    "lint": "echo lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "ci": "npm run test"
   },
   "files": [
     "bin",
@@ -34,7 +38,25 @@
   "dependencies": {
     "fs-extra": "^11.1.1"
   },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "bin/**/*.js",
+      "!**/node_modules/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   }
 }
